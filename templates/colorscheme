@@ -1,20 +1,19 @@
 {#- Color Scheme Template for Vim -#}
 
 {#- Information Section: Header of Vim File -#}
-" {{ information.scheme_name }}.vim -- A Vim color scheme.
+" {{ information.name }} -- A Vim color scheme.
 " Name: {{ information.name }}
 " Author: {{ information.author }}
-{%- match information.description -%}
+{% match information.description -%}
     {%- when Some with (desc) -%}
         " Description: {{ desc }}
     {%- when None -%}
-{%- endmatch -%}
-{%- match information.license -%}
+{%- endmatch %}
+{% match information.license -%}
     {%- when Some with (lic) -%}
         " License: {{ lic }}
     {%- when None -%}
 {%- endmatch %}
-" Generated with chromatic (https://github.com/FrictionlessPortals/chromatic).
 
 hi clear
 
@@ -22,7 +21,7 @@ if exists("syntax_on")
   syntax reset
 endif
 
-let g:colors_name = "{{ information.scheme_name }}"
+let g:colors_name = "{{ information.name }}"
 
 if ($TERM =~ '256' || &t_Co >= 256) || has("gui_running")
 {%- for (highlight_group, highlight) in highlights %}
@@ -50,15 +49,28 @@ if ($TERM =~ '256' || &t_Co >= 256) || has("gui_running")
             set background={{ information.background -}}
         {% endif -%}
 {%- endfor %}
-
 elseif &t_Co == 8 || $TERM !~# '^linux' || &t_Co == 16
     set t_Co=16
-{#- {% for highlight in highlights -%}
-    {% if highlight.length == 2 -%}
-        hi {{ highlight[0] }} ctermbg={{ highlight[1] }} ctermfg={{ highlight[2] }} cterm={{ highlight[3] }}
-        {% if highlight[0] == "Normal" -%}
-            set background={{ information.background }}
+{% for (highlight_group, highlight) in highlights %}
+    hi {{ highlight_group }} {% match highlight.background_color %}
+            {%- when Some with (bg) -%}
+                ctermbg={{ bg }}
+            {%- when None -%}
+                ctermbg=none
+        {%- endmatch %} {% match highlight.foreground_color %}
+            {%- when Some with (fg) -%}
+                ctermfg={{ fg }}
+            {%- when None -%}
+                ctermfg=none
+        {%- endmatch %} {% match highlight.style %}
+            {%- when Some with (st) -%}
+                cterm={{ st }}
+            {%- when None -%}
+                cterm=none
+        {%- endmatch %} {% if highlight_group == "Normal" -%}
+            set background={{ information.background -}}
         {% endif -%}
-    {% endif -%}
-{% endfor -%} -#}
+{%- endfor %}
 endif
+
+" Generated with chromatic (https://github.com/FrictionlessPortals/chromatic).
