@@ -4,11 +4,7 @@
 //! Uses a TOML config to generate a vim color scheme.
 
 use askama::Template;
-use std::convert::TryFrom;
-use std::error::Error;
-use std::fs::File;
-use std::io::Write;
-use std::path::PathBuf;
+use std::{convert::TryFrom, error::Error, fs::File, io::Write, path::PathBuf};
 use structopt::StructOpt;
 
 mod scheme;
@@ -43,7 +39,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         let mut output = File::create(args.output)?;
         output.write_all(template.render()?.as_bytes())?;
     } else {
-        println!("Cannot find input file: {:?}", args.input.as_os_str());
+        eprintln!("Cannot find input file: {:?}", args.input.as_os_str());
     }
 
     Ok(())

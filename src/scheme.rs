@@ -4,12 +4,9 @@
 
 use askama::Template;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-use std::convert::TryFrom;
-use std::error::Error;
-use std::fs::File;
-use std::io::Read;
-use std::path::PathBuf;
+use std::{
+    collections::HashMap, convert::TryFrom, error::Error, fs::File, io::Read, path::PathBuf,
+};
 
 /// Main Color Scheme Template
 #[derive(Template)]
@@ -38,8 +35,8 @@ impl TryFrom<ChromaticConfig> for ChromaticTemplate {
             match h.background_color {
                 Some(x) => {
                     let bg_color = match config.colors.get(&x) {
-                        Some(x) => x.hex.to_owned(),
-                        None => String::from("none")
+                        Some(x) => x.0.to_owned(),
+                        None => String::from("none"),
                     };
                     println!("BG: Matched with {}", bg_color);
                     h.background_color = Some(bg_color);
@@ -51,8 +48,8 @@ impl TryFrom<ChromaticConfig> for ChromaticTemplate {
             match h.foreground_color {
                 Some(x) => {
                     let fg_color = match config.colors.get(&x) {
-                        Some(x) => x.hex.to_owned(),
-                        None => String::from("none")
+                        Some(x) => x.0.to_owned(),
+                        None => String::from("none"),
                     };
                     println!("FG: Matched with {}", fg_color);
                     h.foreground_color = Some(fg_color);
@@ -64,8 +61,8 @@ impl TryFrom<ChromaticConfig> for ChromaticTemplate {
             match h.style_color {
                 Some(x) => {
                     let st_color = match config.colors.get(&x) {
-                        Some(x) => x.hex.to_owned(),
-                        None => String::from("none")
+                        Some(x) => x.0.to_owned(),
+                        None => String::from("none"),
                     };
                     println!("ST: Matched with {}", st_color);
                     h.style_color = Some(st_color);
@@ -115,7 +112,6 @@ impl TryFrom<PathBuf> for ChromaticConfig {
 #[derive(Deserialize, Debug, Serialize, Clone)]
 pub struct Information {
     pub name: String,
-    pub scheme_name: String,
     pub author: String,
     pub background: String,
     pub description: Option<String>,
@@ -124,10 +120,7 @@ pub struct Information {
 
 /// Color Structure for the configuration file.
 #[derive(Deserialize, Debug, Serialize, Clone)]
-pub struct Color {
-    pub hex: String,
-    pub color_integer: u8,
-}
+pub struct Color(pub String, pub String);
 
 /// Highlight Structure for the configuration file.
 #[derive(Deserialize, Debug, Serialize, Clone)]
