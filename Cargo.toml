@@ -5,3 +5,7 @@ authors = ["FrictionlessPortals <8077147+FrictionlessPortals@users.noreply.githu
 edition = "2018"
 
 [dependencies]
+structopt = "0.2"
+serde = { version = "1.0", features = ["derive"]}
+toml = "0.5"
+askama = "0.8"
